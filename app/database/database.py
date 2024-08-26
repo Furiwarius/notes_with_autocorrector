@@ -76,7 +76,7 @@ class Database():
                 connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
                 with connection.cursor() as cursor:
                     cursor.execute(request)
-        except psycopg2.errors as e:
+        except psycopg2.Error as e:
             print(e)
 
 
