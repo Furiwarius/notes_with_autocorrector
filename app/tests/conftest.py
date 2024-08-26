@@ -1,8 +1,11 @@
 from app.database.cruds import AccountCRUD, NotesCRUD
+from app.service import AccountManager
 from app.entities import Account, Note
 from faker import Faker
 import pytest_asyncio
 from random import randrange
+from app.utilities import to_hash
+from copy import copy
 
 
 # набор уникальных цифр
@@ -75,3 +78,24 @@ def account_id(fake:Faker, generate_number:int, acc_crud:AccountCRUD) -> int:
                               password=f"password{generate_number}")
     acc = acc_crud.add(new_acc)
     return acc.id
+
+
+
+@pytest_asyncio.fixture(scope="function")
+def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
+    '''
+    Генерация аккаунта с добавлением его в бд
+    '''
+    new_acc = copy(account)
+    new_acc.login = to_hash(new_acc.login)
+    new_acc.password = to_hash(new_acc.password)
+    
+    acc_crud.add(new_acc=new_acc)
+    return account
+
+
+
+@pytest_asyncio.fixture(scope="session")
+def account_manager() -> AccountManager:
+    
+    return AccountManager()

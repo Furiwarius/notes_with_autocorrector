@@ -30,7 +30,7 @@ class AccountManager():
         if acc_in_db:
             raise LoginExist
         
-        self.acc_crud.add(acc)
+        acc = self.acc_crud.add(acc)
 
         return acc
 
@@ -45,7 +45,7 @@ class AccountManager():
                       password=to_hash(password))
         
         acc_in_db = self.acc_crud.get_by_login(login=acc.login)
-        if acc_in_db:
+        if acc_in_db is None:
             raise LoginNotExist
 
         return acc_in_db
