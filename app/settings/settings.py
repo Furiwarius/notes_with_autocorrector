@@ -1,4 +1,4 @@
-import dotenv
+from datetime import timedelta
 import os
 from functools import lru_cache
 
@@ -21,3 +21,19 @@ class DatabaseSetting():
         self.DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
         # Хост на котором находится бд
         self.HOST = os.getenv("HOST")
+
+
+
+class JWTSettings():
+    '''
+    Настройки для работы с токенами
+    '''
+
+    @lru_cache
+    def __init__(self) -> None:
+
+        self.JWT_KEY = os.getenv("JWT_KEY")
+
+        self.ALGORITHM = "HS256"
+
+        self.EXPIRATION_TIME = timedelta(minutes=30)
