@@ -43,5 +43,5 @@ class NotesCRUD():
         with Database() as db:
             notes = db.query(UserNotesTable).filter(UserNotesTable.account_id==acc_id).all()
 
-        if notes: 
-                return [self.converter.conversion_to_data(note) for note in notes]
+            if notes: 
+                    return [self.converter.conversion_to_data(db.get(NotesTable, user_note.id)) for user_note in notes]

@@ -14,7 +14,7 @@ class Database():
     Имеет всего 1 экземпляр на все приложение
     '''
     # Переменная с именем БД
-    database_name = db_setting.TEST_DATABASE
+    database_name = db_setting.DATABASE_NAME
 
 
     _instance = None  # Приватное поле для хранения единственного экземпляра
@@ -69,16 +69,19 @@ class Database():
         Выполнение запроса
         '''
         try:
-            with psycopg2.connect(
-                host=db_setting.HOST,
-                user=db_setting.DATABASE_USER,
-                password=db_setting.DATABASE_PASSWORD) as connection:
-                connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-                with connection.cursor() as cursor:
-                    cursor.execute(request)
+            conn = psycopg2.connect(dbname=db_setting.DATABASE_SERVER, 
+                                    user=db_setting.DATABASE_USER, 
+                                    password=db_setting.DATABASE_PASSWORD, 
+                                    host=db_setting.HOST)
+            cursor = conn.cursor()
+            
+            conn.autocommit = True            
+            # выполняем код sql
+            cursor.execute(request)
+            cursor.close()
+            conn.close()
         except psycopg2.Error as e:
             print(e)
-
 
 
     def _new_engine(self) -> Engine:
@@ -87,7 +90,7 @@ class Database():
         '''
         self.create_database()
         # строка подключения
-        mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@{db_setting.HOST}/{db_setting.NAME_DATABASE}"
+        mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@{db_setting.HOST}/{db_setting.DATABASE_NAME}"
         # создаем движок SqlAlchemy
         self.engine = create_engine(mysql_database, echo=False)
 

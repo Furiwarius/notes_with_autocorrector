@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, ForeignKey
+from sqlalchemy import String, Integer, ForeignKey, Text
 from sqlalchemy import Column, DateTime
 from app.database.tables.base import Base
 from sqlalchemy.sql import func
@@ -23,7 +23,7 @@ class NotesTable(Base):
     __tablename__ = "notes"
 
     name = Column(String(20), nullable=False)
-    text = Column(String(100), nullable=False)
+    text = Column(Text, nullable=False)
     start_date = Column(DateTime, default=func.now(), server_default=func.now(), nullable=False)
     update_date = Column(DateTime, default=func.now(), server_default=func.now(), onupdate=func.now())
 

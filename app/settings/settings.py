@@ -14,9 +14,9 @@ class DatabaseSetting():
         # имя пользователя БД
         self.DATABASE_USER = os.getenv("DATABASE_USER")
         # Имя тестовой БД
-        self.TEST_DATABASE = os.getenv("TEST_DATABASE")
+        self.DATABASE_SERVER = os.getenv("DATABASE_SERVER")
         # Имя рабочей бд
-        self.NAME_DATABASE = os.getenv("NAME_DATABASE")
+        self.DATABASE_NAME = os.getenv("DATABASE_NAME")
         # Пароль для доступа к бд
         self.DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
         # Хост на котором находится бд
