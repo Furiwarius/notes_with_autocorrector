@@ -1,21 +1,33 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.responses import FileResponse
 from app.api.models.models import UserData 
 from app.service import AccountManager
 from app.errors.service_exc import LoginExist, IncorrectUserData
 from app.entities import Account
 from app.utilities import create_jwt_token
+from fastapi.templating import Jinja2Templates
 
 
 login_account = APIRouter()
+templates = Jinja2Templates(directory="app/templates")
+
 
 
 @login_account.get("/")
-async def index():
+async def index_page(request:Request):
     '''
     Главная страница
     '''
-    return FileResponse("app/templates/index.html")
+    return templates.TemplateResponse(request, "index.html")
+
+
+
+@login_account.get("/registr")
+async def registr_page(request:Request):
+    '''
+    Страница регистрации
+    '''
+    return templates.TemplateResponse(request, "registr.html")
 
 
 

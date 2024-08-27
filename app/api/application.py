@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.api.routes.login_account import login_account
+from app.api.routes.notes import notes
 
 
 class Application():
