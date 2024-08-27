@@ -7,11 +7,13 @@ class Application():
     Приложение
     '''
 
+
+    @classmethod
     def create_app(self) -> FastAPI:
         '''
         Создание приложения
         '''
-        self.app = FastAPI()
-        self.app.include_router(login_account)
+        app = FastAPI()
+        app.include_router(login_account)
         
-        return self.app
+        return app

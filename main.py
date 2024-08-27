@@ -1,3 +1,3 @@
-from app.api import app
+from app import app
 
 # Запуск uvicorn main:app --reload
