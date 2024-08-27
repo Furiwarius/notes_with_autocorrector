@@ -1,6 +1,4 @@
 from sqlalchemy import create_engine, Engine
-import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from app.settings import db_setting
 from app.database.tables.base import Base
 from sqlalchemy.orm import Session
@@ -42,53 +40,10 @@ class Database():
             self.session.close()
 
 
-
-
-    def create_database(self) -> None:
-        '''
-        Метод для создания базы данных
-        '''
-        
-        create_db_query = f"CREATE DATABASE {self.database_name}"
-        self._execution_request(request=create_db_query)
-            
-
-
-    def delete_database(self) -> None:
-        '''
-        Метод для удаления базы данных
-        '''
-
-        delete_request = f"DROP DATABASE {self.database_name}"
-        self._execution_request(request=delete_request)
-
-
-
-    def _execution_request(self, request:str) -> None:
-        '''
-        Выполнение запроса
-        '''
-        try:
-            conn = psycopg2.connect(dbname=db_setting.DATABASE_SERVER, 
-                                    user=db_setting.DATABASE_USER, 
-                                    password=db_setting.DATABASE_PASSWORD, 
-                                    host=db_setting.HOST)
-            cursor = conn.cursor()
-            
-            conn.autocommit = True            
-            # выполняем код sql
-            cursor.execute(request)
-            cursor.close()
-            conn.close()
-        except psycopg2.Error as e:
-            print(e)
-
-
     def _new_engine(self) -> Engine:
         '''
         Создание движка SQLalchemy
         '''
-        self.create_database()
         # строка подключения
         mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@{db_setting.HOST}/{db_setting.DATABASE_NAME}"
         # создаем движок SqlAlchemy
