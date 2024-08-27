@@ -15,7 +15,7 @@ async def index():
     '''
     Главная страница
     '''
-    return FileResponse("index.html")
+    return FileResponse("app/templates/index.html")
 
 
 

@@ -6,6 +6,10 @@ import pytest_asyncio
 from random import randrange
 from app.utilities import to_hash
 from copy import copy
+from app.api import app
+from fastapi.testclient import TestClient
+from httpx import ASGITransport, AsyncClient
+from typing import AsyncGenerator, Generator
 
 
 # набор уникальных цифр
@@ -90,7 +94,8 @@ def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
     new_acc.login = to_hash(new_acc.login)
     new_acc.password = to_hash(new_acc.password)
     
-    acc_crud.add(new_acc=new_acc)
+    result = acc_crud.add(new_acc=new_acc)
+    account.id = result.id
     return account
 
 
@@ -99,3 +104,22 @@ def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
 def account_manager() -> AccountManager:
     
     return AccountManager()
+
+
+
+@pytest_asyncio.fixture(scope="session")
+def anyio_backend():
+    return "asyncio"
+
+
+
+@pytest_asyncio.fixture(scope="session")
+def client() -> Generator:
+    yield TestClient(app)
+
+
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def async_client(client:TestClient) -> AsyncGenerator:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url=client.base_url) as ac:
+        yield ac
