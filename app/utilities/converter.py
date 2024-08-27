@@ -2,6 +2,7 @@ from app.entities.account import Account
 from app.entities.note import Note
 from app.database.tables.essence import AccountsTable as AccTable
 from app.database.tables.essence import NotesTable
+import functools 
 
 
 
@@ -64,3 +65,47 @@ class Converter():
             setattr(class_instance, atr, getattr(item, atr))
 
         return class_instance
+
+
+
+converter = Converter()
+
+
+def convertertation(func) -> Note|Account|None:
+    '''
+    Конвертор декоратор
+
+    Переводит входящие даннные в круды к табличным представлениям, 
+    а результат к классам entities
+    '''
+    
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        new_args = list()
+        for arg in args:
+            if type(arg) in (Note, Account):
+                new_args.append(converter.conversion_to_table(arg))
+            else:
+                new_args.append(arg)
+        
+        new_kwargs = dict()
+        for key, item in kwargs.items():
+            if type(item) in (NotesTable, AccTable):
+                new_kwargs[key] = converter.conversion_to_table(item)
+            else:
+                new_kwargs[key] = item
+        
+        try:
+            result = func(*new_args, **new_kwargs)
+        except Exception as er:
+            raise er
+        
+        if isinstance(result, list):
+            result = [converter.conversion_to_data(item) for item in result]
+
+        elif type(result) in (NotesTable, AccTable):
+            result = converter.conversion_to_data(result)
+
+        return result
+
+    return wrapper

@@ -94,7 +94,7 @@ def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
     new_acc.login = to_hash(new_acc.login)
     new_acc.password = to_hash(new_acc.password)
     
-    result = acc_crud.add(new_acc=new_acc)
+    result = acc_crud.add(new_acc)
     account.id = result.id
     return account
 
