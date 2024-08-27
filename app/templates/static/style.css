@@ -1,0 +1,36 @@
+.text-field {
+    width: 700px;
+    margin: 0 auto;
+}
+.text-field .text {
+    width: 700px;
+    height: 400px;
+    margin-bottom: 10px;
+}
+.button-field {
+    width: 500px;
+    margin: 0 auto;
+    padding: 5px;
+}
+.button-field .button {
+    width: 500px;
+    font-size: 20px;
+}
+.last-layer {
+    margin-bottom: 50px;
+}
+
+.text-form{
+    text-align: center;
+    width: 700px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.text-form .text_form{
+    width: 700px;
+    height: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    padding: 5px;
+}
