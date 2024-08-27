@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import FileResponse
 from app.api.models.models import UserData 
 from app.service import AccountManager
-from app.errors.service_exc import LoginExist, LoginNotExist, IncorrectPassword
+from app.errors.service_exc import LoginExist, IncorrectUserData
 from app.entities import Account
 from app.utilities import create_jwt_token
 
@@ -44,10 +44,8 @@ async def login(user: UserData,
     try:
         acc: Account = account_manager.exist_user(login=user.login, 
                                          password=user.password)
-    except LoginNotExist as err:
-        raise HTTPException(status_code=401, detail="Wrong login") from err
-    except IncorrectPassword as err:
-        raise HTTPException(status_code=401, detail="Wrong password") from err
+    except IncorrectUserData as err:
+        raise HTTPException(status_code=401, detail="Wrong login/password") from err
     
     token = create_jwt_token({"user_id": acc.id})
     return {"token": token}

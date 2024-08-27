@@ -10,15 +10,8 @@ class LoginExist(BaseApplicationException):
 
 
 
-class LoginNotExist(BaseApplicationException):
+class IncorrectUserData(BaseApplicationException):
     '''
     Исключение, которое вызывается,
-    если аккаунта не существует
-    '''
-
-
-class IncorrectPassword(BaseApplicationException):
-    '''
-    Исплючение, которое вызывается, если пароль
-    не совпадает с сохраненным в бд
+    если введены переданы неверные данные при авторизации
     '''

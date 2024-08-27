@@ -1,7 +1,7 @@
 from app.service import AccountManager
 from app.entities.account import Account
 import pytest
-from app.errors.service_exc import LoginExist, LoginNotExist, IncorrectPassword
+from app.errors.service_exc import LoginExist, IncorrectUserData
 
 
 
@@ -58,7 +58,7 @@ class TestService():
         AccountManager.exist_user() c вызовом
         исключения LoginNotExist
         '''
-        with pytest.raises(LoginNotExist):
+        with pytest.raises(IncorrectUserData):
             account_manager.exist_user(login=account.login,
                                          password=account.password)
             
@@ -74,6 +74,6 @@ class TestService():
         исключения IncorrectPassword
         '''
 
-        with pytest.raises(IncorrectPassword):
+        with pytest.raises(IncorrectUserData):
             account_manager.exist_user(login=exist_account.login,
                                        password=exist_account.password+"string")

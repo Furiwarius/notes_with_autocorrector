@@ -1,7 +1,7 @@
 from app.database.cruds import AccountCRUD
 from app.utilities import to_hash
 from app.entities import Account
-from app.errors.service_exc import LoginExist, LoginNotExist, IncorrectPassword
+from app.errors.service_exc import LoginExist, IncorrectUserData
 
 
 
@@ -45,9 +45,8 @@ class AccountManager():
                       password=to_hash(password))
         
         acc_in_db = self.acc_crud.get_by_login(login=acc.login)
-        if acc_in_db is None:
-            raise LoginNotExist
-        elif acc.password != acc_in_db.password:
-            raise IncorrectPassword
+
+        if acc_in_db is None or acc.password != acc_in_db.password:
+            raise IncorrectUserData
 
         return acc_in_db
