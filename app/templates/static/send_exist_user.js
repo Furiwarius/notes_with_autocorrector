@@ -16,7 +16,8 @@ async function send_user(){
     if (response.ok) {
         const data = await response.json(); 
         // Сохранение токена
-        localStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('authToken', data.token);
+        await notes()
     }
     else {
         await invalid_input()
@@ -26,4 +27,22 @@ async function send_user(){
 
 async function invalid_input() {
     alert("Неверный логин или пароль!");
+}
+
+
+
+async function notes() {
+
+    const token = sessionStorage.getItem('authToken');
+
+    // отправляем запрос
+    const response = await fetch("/notes", {
+                    method: "GET",
+                    headers: { 'Authorization': 'Bearer ' + token,
+                        "Accept": "application/json", 
+                        "Content-Type": "application/json" }});
+    if (response.ok) {
+        const text = await response.text(); 
+        document.body.innerHTML = text;
+}
 }

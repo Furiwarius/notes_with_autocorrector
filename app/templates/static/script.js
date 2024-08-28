@@ -26,11 +26,14 @@ async function save() {
     // получаем введеные данные
     const name = document.getElementById("note_name").value;
     const text = document.getElementById("text_field").value;
+    const token = sessionStorage.getItem('authToken');
 
     // отправляем запрос
     const response = await fetch("/new_note", {
                     method: "POST",
-                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                    headers: { 'Authorization': 'Bearer ' + token, 
+                      "Accept": "application/json", 
+                      "Content-Type": "application/json" },
                     body: JSON.stringify({ 
                         name: name,
                         text: text
@@ -38,7 +41,7 @@ async function save() {
                     });
     if (response.ok) {
         window.location.href = "/notes"
-        message()
+        alert("Заметка успешно сохранена");
     }
     else {
         await server_error()
@@ -48,9 +51,4 @@ async function save() {
 
 async function server_error() {
   alert("При сохранении заметки произошла ошибка!");
-}
-
-
-function message() {
-  alert("Заметка успешно сохранена");
 }

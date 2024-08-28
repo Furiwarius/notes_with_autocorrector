@@ -1,4 +1,4 @@
 async function loguot() {
-    localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
     window.location.href = "/"
 }
