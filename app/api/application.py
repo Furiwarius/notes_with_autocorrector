@@ -16,5 +16,6 @@ class Application():
         '''
         app = FastAPI()
         app.include_router(login_account)
+        app.include_router(notes)
         
         return app

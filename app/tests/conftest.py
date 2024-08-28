@@ -10,6 +10,7 @@ from app.api import app
 from fastapi.testclient import TestClient
 from httpx import ASGITransport, AsyncClient
 from typing import AsyncGenerator, Generator
+from app.utilities.jwt_func import create_jwt_token
 
 
 # набор уникальных цифр
@@ -94,7 +95,7 @@ def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
     new_acc.login = to_hash(new_acc.login)
     new_acc.password = to_hash(new_acc.password)
     
-    result = acc_crud.add(new_acc)
+    result:Account = acc_crud.add(new_acc)
     account.id = result.id
     return account
 
@@ -123,3 +124,13 @@ def client() -> Generator:
 async def async_client(client:TestClient) -> AsyncGenerator:
     async with AsyncClient(transport=ASGITransport(app=app), base_url=client.base_url) as ac:
         yield ac
+
+
+
+@pytest_asyncio.fixture(scope="function")
+def token(exist_account:Account) -> str:
+    '''
+    Генерация аккаунта с добавлением его в бд и возвращением токена
+    '''
+
+    return create_jwt_token({"user_id": exist_account.id})

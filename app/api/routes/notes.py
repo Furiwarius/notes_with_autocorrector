@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 from app.api.models.models import Note, User
 from app.database.cruds import NotesCRUD
+from app.service.note.note_service import NoteManager
 from app.errors.service_exc import LoginExist
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
@@ -26,7 +27,7 @@ async def get_notes(request:Request,
     '''
     Получение списка заметок
     '''
-    notes = notes_crud.get_notes(user.user_id)
+    notes = notes_crud.get_notes(user["user_id"])
     
     return templates.TemplateResponse(request, "notes.html", {"notes":notes})
 
@@ -39,18 +40,21 @@ async def new_note(request:Request,
     Получение страницы для добавления новой заметки
     '''
     
-    return templates.TemplateResponse(request, "new_notee.html")
+    return templates.TemplateResponse(request, "new_note.html")
 
 
 
 @notes.post("/new_note")
 async def add_note(note:Note,
                    user: Annotated[User, Depends(get_current_user)],
-                   notes_crud: NotesCRUD = Depends(NotesCRUD)):
+                   note_manager: NoteManager = Depends(NoteManager)):
     '''
     Добавление новой заметки
     '''
     
-    notes_crud.add(user.user_id, note)
+
+    note_manager.new_note(account_id=user["user_id"], 
+                          note_name=note.name,
+                          note_text=note.text)
 
     return {"message": "Note added!"}
