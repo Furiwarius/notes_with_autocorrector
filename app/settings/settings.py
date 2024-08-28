@@ -1,6 +1,10 @@
 from datetime import timedelta
 import os
 from functools import lru_cache
+import dotenv
+
+
+dotenv.load_dotenv()
 
 
 class DatabaseSetting():
