@@ -65,10 +65,52 @@ class Converter():
             setattr(class_instance, atr, getattr(item, atr))
 
         return class_instance
+    
+
+    def conversion_input_args(self, args:tuple) -> tuple:
+        '''
+        Переводит образы таблиц в entities экземпляры
+        '''
+
+        new_args = list()
+        for arg in args:
+            if type(arg) in (Note, Account):
+                new_args.append(self.conversion_to_table(arg))
+            else:
+                new_args.append(arg)
+        
+        return new_args
+
+
+
+    def conversion_input_kwargs(self, kwargs:dict) -> dict:
+        '''
+        Переводит образы таблиц в entities экземпляры  
+        '''
+        new_kwargs = dict()
+        for key, item in kwargs.items():
+            if isinstance(item, (NotesTable, AccTable)):
+                new_kwargs[key] = self.conversion_to_table(item)
+            else:
+                new_kwargs[key] = item
+        return new_kwargs
+    
+
+
+    def conversion_result_func(self, result:list|NotesTable|AccTable):
+        
+        if isinstance(result, list):
+            result = [converter.conversion_to_data(item) for item in result]
+
+        elif isinstance(result, (NotesTable, AccTable)):
+            result = converter.conversion_to_data(result)
+        
+        return result
 
 
 
 converter = Converter()
+
 
 
 def convertertation(func) -> Note|Account|None:
@@ -80,32 +122,14 @@ def convertertation(func) -> Note|Account|None:
     '''
     
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        new_args = list()
-        for arg in args:
-            if type(arg) in (Note, Account):
-                new_args.append(converter.conversion_to_table(arg))
-            else:
-                new_args.append(arg)
-        
-        new_kwargs = dict()
-        for key, item in kwargs.items():
-            if type(item) in (NotesTable, AccTable):
-                new_kwargs[key] = converter.conversion_to_table(item)
-            else:
-                new_kwargs[key] = item
+    def wrapper(*args, **kwargs):        
         
         try:
-            result = func(*new_args, **new_kwargs)
+            result = func(*converter.conversion_input_args(args), 
+                          **converter.conversion_input_kwargs(kwargs))
         except Exception as er:
             raise er
-        
-        if isinstance(result, list):
-            result = [converter.conversion_to_data(item) for item in result]
 
-        elif type(result) in (NotesTable, AccTable):
-            result = converter.conversion_to_data(result)
-
-        return result
+        return converter.conversion_result_func(result)
 
     return wrapper

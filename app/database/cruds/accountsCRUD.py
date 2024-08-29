@@ -33,7 +33,4 @@ class AccountCRUD():
         Получить аккаунт по логину
         '''
         with Database() as db:
-            account = db.query(AccountsTable).filter(AccountsTable.login==login).all()
-
-        if account:
-            return account[0]
+            return db.query(AccountsTable).filter(AccountsTable.login==login).one_or_none()
