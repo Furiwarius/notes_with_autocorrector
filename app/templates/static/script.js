@@ -40,8 +40,7 @@ async function save() {
                         })
                     });
     if (response.ok) {
-        window.location.href = "/notes"
-        alert("Заметка успешно сохранена");
+        await notes()
     }
     else {
         await server_error()
@@ -51,4 +50,21 @@ async function save() {
 
 async function server_error() {
   alert("При сохранении заметки произошла ошибка!");
+}
+
+
+async function notes() {
+
+  const token = sessionStorage.getItem('authToken');
+
+  // отправляем запрос
+  const response = await fetch("/notes", {
+                  method: "GET",
+                  headers: { 'Authorization': 'Bearer ' + token,
+                      "Accept": "application/json", 
+                      "Content-Type": "application/json" }});
+  if (response.ok) {
+      const text = await response.text(); 
+      document.body.innerHTML = text;
+}
 }
