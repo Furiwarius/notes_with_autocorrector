@@ -1,0 +1,11 @@
+services:
+  notes_with_autocorrector:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: Notes-With_Autocorrector
+    ports:
+      - "8000:8000"
+      - "5432:5432"
+    env_file:
+      - .env
