@@ -42,5 +42,4 @@ class NotesCRUD():
             notes = db.query(UserNotesTable).filter(UserNotesTable.account_id==acc_id).all()
 
             if notes: 
-                    print(notes)
                     return [db.get(NotesTable, user_note.note_id) for user_note in notes]
