@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Engine
 from app.settings import db_setting
 from app.database.tables.base import Base
 from sqlalchemy.orm import Session
-
+import psycopg2
 
 
 class Database():
@@ -11,8 +11,6 @@ class Database():
 
     Имеет всего 1 экземпляр на все приложение
     '''
-    # Переменная с именем БД
-    database_name = db_setting.DATABASE_NAME
 
 
     _instance = None  # Приватное поле для хранения единственного экземпляра
@@ -44,8 +42,9 @@ class Database():
         '''
         Создание движка SQLalchemy
         '''
+        self.create_database()
         # строка подключения
-        mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@{db_setting.HOST}/{db_setting.DATABASE_NAME}"
+        mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@db/{db_setting.DATABASE_NAME}"
         # создаем движок SqlAlchemy
         self.engine = create_engine(mysql_database, echo=False)
 
@@ -57,3 +56,30 @@ class Database():
         '''
         # создаем таблицы
         Base.metadata.create_all(bind=self.engine)
+
+
+
+    def create_database(self) -> None:
+        '''
+        Метод для создания базы данных
+        '''
+        
+        create_db_query = f"CREATE DATABASE {db_setting.DATABASE_NAME}"
+
+        conn = psycopg2.connect(dbname=db_setting.DATABASE_SERVER, 
+                                user=db_setting.DATABASE_USER, 
+                                password=db_setting.DATABASE_PASSWORD, 
+                                host='db')
+        cursor = conn.cursor()
+        conn.autocommit = True
+
+        try:
+            # выполняем код sql
+            cursor.execute(create_db_query)
+            print("База данных успешно создана")
+
+        except psycopg2.errors.DuplicateDatabase:
+            print("База данных уже существует")
+
+        cursor.close()
+        conn.close()

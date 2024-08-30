@@ -1,4 +1,4 @@
-FROM python:3.12 as builder
+FROM python:3.12 AS builder
 
 # Метаданные
 LABEL author="VasiliyTrunov" 
@@ -13,4 +13,4 @@ RUN pip install -r ./requirements.txt
 # Копируем в папку наш проект
 COPY . .
 
-ENTRYPOINT bash -c "uvicorn main:app --host 127.0.0.1 --port 8000 --reload"
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
