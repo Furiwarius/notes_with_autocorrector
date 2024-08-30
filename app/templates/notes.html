@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div data-hook="blocks-collection-content-node">
+
+    <div class="r" style="padding-top: 15px; padding-bottom: 15px;">
+        <div class="t056">
+            <div class="container centeredSection">
+                <div class="lr_col_10 prefix_1">
+                    <h1 field="title"><div style="font-size:28px;" data-customstyle="yes"><strong>Ваши заметки</strong></div></h1>
+                    <div class="descr" field="descr"><div style="font-size:18px;" data-customstyle="yes">
+                        <span>
+
+                            {% if notes != None %}
+
+                                {% for note in notes %}
+                                
+                                    <h3 style="font-size:20px;"> {{ note.name }} </h3>
+                                    <p> {{ note.text }}</p>
+
+                                    {% if notes|length > 1 %}
+                                        <hr size="1" color="#b5a48b" />
+                                    {% endif %}
+                                
+                                {% endfor %}
+
+                            {% else %}
+                                <p>У Вас пока что нет заметок</p>
+
+                            {% endif %}
+                            
+                        </span>
+                    </div></div>      
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="r last-layer">
+
+        <div class="button-field">
+            <input id="new_note" type="button" value="Добавить заметку" class="button" onClick="new_note()">
+        </div>
+
+        <div class="button-field">
+            <input id="loguot" type="button" value="Выйти" class="button" onClick="loguot()">
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
