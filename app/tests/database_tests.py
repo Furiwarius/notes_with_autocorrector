@@ -34,7 +34,8 @@ class TestDatabase():
         '''
         Тестирование метода по добавлению заметки
         '''
-        new_note:Note = note_crud.add(account_id, note)
+        note.account_id = account_id
+        new_note:Note = note_crud.add(note)
         assert new_note.id
 
 
