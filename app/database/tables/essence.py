@@ -29,4 +29,4 @@ class AccountsTable(Base):
 
     login = Column(String(65), nullable=False, unique=True)
     password = Column(String(65), nullable=False)
-    notes = relationship("NotesTable", back_populates="account")
+    notes = relationship("NotesTable", back_populates="account", lazy="joined")
