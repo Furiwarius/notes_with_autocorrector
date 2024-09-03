@@ -16,6 +16,7 @@ class NoteManager():
         '''
 
         note = Note(name=note_name,
-                    text=note_text)
+                    text=note_text,
+                    account_id=account_id)
         
-        self.note_crud.add(account_id, note)
+        self.note_crud.add(note)
