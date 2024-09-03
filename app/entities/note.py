@@ -12,3 +12,5 @@ class Note():
     name: str = None
     # содержание заметки
     text: str = None
+    # id аккаунта владельца
+    account_id: int = None

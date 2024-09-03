@@ -50,13 +50,14 @@ def account(fake:Faker, generate_number:int) -> Account:
 
 
 @pytest_asyncio.fixture(scope="function")
-def note(fake:Faker) -> Note:
+def note(account_id:int, fake:Faker) -> Note:
     '''
     Генератор заметки
     '''
 
     new_note = Note(name=fake.word(),
-                    text=fake.paragraph())
+                    text=fake.paragraph(),
+                    account_id=account_id)
 
     return new_note
 

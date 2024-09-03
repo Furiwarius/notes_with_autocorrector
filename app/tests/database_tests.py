@@ -30,11 +30,11 @@ class TestDatabase():
     
 
 
-    def test_add_note(self, account_id:int, note:Note, note_crud:NotesCRUD):
+    def test_add_note(self, note:Note, note_crud:NotesCRUD):
         '''
         Тестирование метода по добавлению заметки
         '''
-        new_note:Note = note_crud.add(account_id, note)
+        new_note:Note = note_crud.add(note)
         assert new_note.id
 
 
@@ -43,7 +43,7 @@ class TestDatabase():
         '''
         Тестирование метода по получению всех заметок пользователя
         '''
-        new_note:Note = note_crud.add(account_id, note)
+        new_note:Note = note_crud.add(note)
         assert new_note.id
 
         notes = note_crud.get_notes(acc_id=account_id)

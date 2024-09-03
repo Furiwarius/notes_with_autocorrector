@@ -1,5 +1,5 @@
 from app.entities import Note
-from app.database.tables.essence import NotesTable, UserNotesTable
+from app.database.tables.essence import NotesTable, AccountsTable
 from app.utilities import convertertation
 from app.database import Database
 
@@ -12,7 +12,7 @@ class NotesCRUD():
 
 
     @convertertation
-    def add(self, acc_id:int, note:Note) -> Note:
+    def add(self, note:Note) -> Note:
         '''
         Добавить заметку для аккаунта
         '''
@@ -20,12 +20,6 @@ class NotesCRUD():
 
             db.add(note)     # добавляем в бд
             db.commit()     # сохраняем изменения
-            
-            new_user_note = UserNotesTable(account_id=acc_id,
-                                           note_id=note.id)
-            
-            db.add(new_user_note)
-            db.commit()
 
             result = db.query(NotesTable).order_by(NotesTable.id.desc()).first()
 
@@ -39,7 +33,7 @@ class NotesCRUD():
         Получить заметки аккаунта
         '''
         with Database() as db:
-            notes = db.query(UserNotesTable).filter(UserNotesTable.account_id==acc_id).all()
+            acc = db.query(AccountsTable).filter(AccountsTable.id==acc_id).one_or_none()
 
-            if notes: 
-                    return [db.get(NotesTable, user_note.note_id) for user_note in notes]
+            if acc.notes: 
+                    return acc.notes
