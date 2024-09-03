@@ -42,7 +42,10 @@ class Converter():
 
         # Заполнение полей
         for atr in param_names:
-            setattr(class_instance, atr, getattr(item, atr))
+            value = getattr(item, atr)
+            if isinstance(value, list):
+                value = [self.conversion_to_data(elem) for elem in value]
+            setattr(class_instance, atr, value)
         
         return class_instance 
 
