@@ -13,4 +13,4 @@ class Note(BaseModel):
 
 
 class User(BaseModel):
-    user_id: str
+    user_id: int

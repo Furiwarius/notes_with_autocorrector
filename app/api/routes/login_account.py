@@ -1,16 +1,13 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
-from fastapi.responses import FileResponse
 from app.api.models.models import UserData 
 from app.service import AccountManager
 from app.errors.service_exc import LoginExist, IncorrectUserData
 from app.entities import Account
 from app.utilities import create_jwt_token
-from fastapi.templating import Jinja2Templates
+from app.api.dependencies import templates
 
 
 login_account = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
-
 
 
 @login_account.get("/")
