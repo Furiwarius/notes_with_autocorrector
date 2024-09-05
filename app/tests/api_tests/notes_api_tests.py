@@ -1,4 +1,4 @@
-from app.entities import Note, Account
+from app.entities import Note
 from httpx import AsyncClient
 from fastapi import status
 import pytest

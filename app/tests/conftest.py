@@ -10,7 +10,7 @@ from app.api import app
 from fastapi.testclient import TestClient
 from httpx import ASGITransport, AsyncClient
 from typing import AsyncGenerator, Generator
-from app.utilities.jwt_func import create_jwt_token
+from app.api.dependencies import create_jwt_token
 
 
 # набор уникальных цифр

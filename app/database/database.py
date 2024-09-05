@@ -69,7 +69,7 @@ class Database():
         conn = psycopg2.connect(dbname=db_setting.DATABASE_SERVER, 
                                 user=db_setting.DATABASE_USER, 
                                 password=db_setting.DATABASE_PASSWORD, 
-                                host="db")
+                                host='db')
         cursor = conn.cursor()
         conn.autocommit = True
 
