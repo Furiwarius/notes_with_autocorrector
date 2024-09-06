@@ -1,16 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
-from fastapi.responses import FileResponse
-from app.api.models.models import UserData 
+from app.api.models.models import UserData, Token
 from app.service import AccountManager
 from app.errors.service_exc import LoginExist, IncorrectUserData
 from app.entities import Account
-from app.utilities import create_jwt_token
-from fastapi.templating import Jinja2Templates
+from app.api.dependencies import create_jwt_token, templates
+from typing import Annotated
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 login_account = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
-
 
 
 @login_account.get("/")
@@ -32,13 +30,13 @@ async def registr_page(request:Request):
 
 
 @login_account.post("/registr")
-async def new_user(new_user: UserData, 
+async def new_user(new_user: Annotated[OAuth2PasswordRequestForm, Depends()], 
                    account_manager: AccountManager = Depends(AccountManager)):
     '''
     Регистрация пользователя
     '''
     try:
-        account_manager.new_user(login=new_user.login, password=new_user.password)
+        account_manager.new_user(login=new_user.username, password=new_user.password)
     
     except LoginExist as err:
         raise HTTPException(status_code=422, detail="This login is already in use") from err
@@ -47,20 +45,20 @@ async def new_user(new_user: UserData,
 
 
 
-@login_account.post("/login")
-async def login(user: UserData,
-                account_manager: AccountManager = Depends(AccountManager)):
+@login_account.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+                account_manager: AccountManager = Depends(AccountManager)) -> Token:
     '''
-    Вход
+    Получение токена для пользователя
     '''
     try:
-        acc: Account = account_manager.exist_user(login=user.login, 
-                                         password=user.password)
+        acc: Account = account_manager.exist_user(login=form_data.username, 
+                                         password=form_data.password)
     except IncorrectUserData as err:
         raise HTTPException(status_code=401, detail="Wrong login/password") from err
     
-    token = create_jwt_token({"user_id": acc.id})
-    return {"token": token}
+    token: str = create_jwt_token({"user_id": acc.id})
 
+    return Token(access_token=token, token_type="bearer")
 
 
