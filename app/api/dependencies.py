@@ -15,27 +15,27 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 
-def create_jwt_token(data: dict) -> str:
+async def create_jwt_token(data: dict) -> str:
     '''
     Создание токена из словаря данных
     '''
     # Время жизни токена
-    expiration = datetime.now(timezone.utc) + jwt_settings.EXPIRATION_TIME
+    expiration:datetime = datetime.now(timezone.utc) + jwt_settings.EXPIRATION_TIME
     # Добавляем в тело токена время жизни
     data.update({"exp": expiration})
 
-    token = jwt.encode(data, jwt_settings.JWT_KEY, algorithm=jwt_settings.ALGORITHM)
+    token:str = jwt.encode(data, jwt_settings.JWT_KEY, algorithm=jwt_settings.ALGORITHM)
     
     return token
 
 
 
-def verify_jwt_token(token: str) -> User:
+async def verify_jwt_token(token: str) -> User:
     '''
     Расшифровка токена
     '''
     try:
-        decoded_data = jwt.decode(token, 
+        decoded_data:dict = jwt.decode(token, 
                                   jwt_settings.JWT_KEY, 
                                   algorithms=[jwt_settings.ALGORITHM])
         
@@ -58,7 +58,7 @@ async def getting_data(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     )
 
     try:
-        user:User = verify_jwt_token(token)
+        user:User = await verify_jwt_token(token)
     except InvalidTokenError:
         raise credentials_exception
     

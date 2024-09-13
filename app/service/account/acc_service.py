@@ -12,10 +12,10 @@ class AccountManager():
     '''
 
 
-    acc_crud = AccountCRUD()
+    acc_crud:AccountCRUD = AccountCRUD()
 
 
-    def new_user(self, login:str, password:str) -> Account:
+    async def new_user(self, login:str, password:str) -> Account:
         '''
         Добавление нового пользователя
 
@@ -23,28 +23,28 @@ class AccountManager():
         при удачном внесении в бд.
         '''
 
-        acc = Account(login=to_hash(login),
-                      password=to_hash(password))
+        acc:Account = Account(login=await to_hash(login),
+                      password=await to_hash(password))
 
-        acc_in_db = self.acc_crud.get_by_login(login=acc.login)
+        acc_in_db:Account = await self.acc_crud.get_by_login(login=acc.login)
         if acc_in_db:
             raise LoginExist
         
-        acc = self.acc_crud.add(acc)
+        acc:Account = await self.acc_crud.add(acc)
 
         return acc
 
 
 
-    def exist_user(self, login:str, password:str) -> Account:
+    async def exist_user(self, login:str, password:str) -> Account:
         '''
         Попытка входа за существующего пользователя
         '''
 
-        acc = Account(login=to_hash(login),
-                      password=to_hash(password))
+        acc:Account = Account(login=await to_hash(login),
+                      password=await to_hash(password))
         
-        acc_in_db = self.acc_crud.get_by_login(login=acc.login)
+        acc_in_db:Account = await self.acc_crud.get_by_login(login=acc.login)
 
         if acc_in_db is None or acc.password != acc_in_db.password:
             raise IncorrectUserData

@@ -1,6 +1,6 @@
 import hashlib
 
-def to_hash(data:str) -> str:
+async def to_hash(data:str) -> str:
     '''
     Перевод строки в hash по алгоритму sha256
     '''

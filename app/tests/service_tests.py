@@ -10,20 +10,20 @@ class TestService():
     Тестирование классов бизнес-логики
     '''
 
-
-    def test_new_user(self, account:Account, account_manager:AccountManager):
+    @pytest.mark.asyncio
+    async def test_new_user(self, account:Account, account_manager:AccountManager):
         '''
         Тестирование метода по добавлению
         нового аккаунта 
         AccountManager.new_user()
         '''
-        acc:Account = account_manager.new_user(login=account.login,
+        acc:Account = await account_manager.new_user(login=account.login,
                                                password=account.password)
         assert acc.id
 
 
-
-    def test_new_user_with_LoginExist(self, 
+    @pytest.mark.asyncio
+    async def test_new_user_with_LoginExist(self, 
                                       exist_account:Account, 
                                       account_manager:AccountManager):
         '''
@@ -32,26 +32,26 @@ class TestService():
         '''
 
         with pytest.raises(LoginExist):
-            account_manager.new_user(login=exist_account.login,
+            await account_manager.new_user(login=exist_account.login,
                                      password=exist_account.password)
 
 
-
-    def test_exist_user(self, exist_account:Account, account_manager:AccountManager):
+    @pytest.mark.asyncio
+    async def test_exist_user(self, exist_account:Account, account_manager:AccountManager):
         '''
         Тестирование метода по получению
         данных существующего аккаунта 
         AccountManager.exist_user()
         '''
 
-        acc:Account = account_manager.exist_user(login=exist_account.login,
+        acc:Account = await account_manager.exist_user(login=exist_account.login,
                                          password=exist_account.password)
         
         assert acc.id
 
     
-
-    def test_exist_user_with_LoginNotExist(self, account:Account, account_manager:AccountManager):
+    @pytest.mark.asyncio
+    async def test_exist_user_with_LoginNotExist(self, account:Account, account_manager:AccountManager):
         '''
         Тестирование метода по получению
         данных существующего аккаунта 
@@ -59,12 +59,12 @@ class TestService():
         исключения LoginNotExist
         '''
         with pytest.raises(IncorrectUserData):
-            account_manager.exist_user(login=account.login,
+            await account_manager.exist_user(login=account.login,
                                          password=account.password)
             
     
-
-    def test_exist_user_with_IncorrectPassword(self, 
+    @pytest.mark.asyncio
+    async def test_exist_user_with_IncorrectPassword(self, 
                                                exist_account:Account, 
                                                account_manager:AccountManager):
         '''
@@ -75,5 +75,5 @@ class TestService():
         '''
 
         with pytest.raises(IncorrectUserData):
-            account_manager.exist_user(login=exist_account.login,
+            await account_manager.exist_user(login=exist_account.login,
                                        password=exist_account.password+"string")

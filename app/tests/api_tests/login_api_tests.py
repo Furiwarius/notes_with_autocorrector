@@ -71,7 +71,7 @@ class TestLoginAccountRoutes():
         jwt_data = response.json()
         assert jwt_data["access_token"]
 
-        user: User = verify_jwt_token(token=jwt_data["access_token"])
+        user: User = await verify_jwt_token(token=jwt_data["access_token"])
 
         assert exist_account.id==int(user.user_id)
     

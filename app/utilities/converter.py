@@ -70,7 +70,7 @@ class Converter():
         return class_instance
     
 
-    def conversion_input_args(self, args:tuple) -> tuple:
+    async def conversion_input_args(self, args:tuple) -> tuple:
         '''
         Переводит образы таблиц в entities экземпляры
         '''
@@ -86,7 +86,7 @@ class Converter():
 
 
 
-    def conversion_input_kwargs(self, kwargs:dict) -> dict:
+    async def conversion_input_kwargs(self, kwargs:dict) -> dict:
         '''
         Переводит образы таблиц в entities экземпляры  
         '''
@@ -100,7 +100,7 @@ class Converter():
     
 
 
-    def conversion_result_func(self, result:list|NotesTable|AccTable):
+    async def conversion_result_func(self, result:list|NotesTable|AccTable):
         
         if isinstance(result, list):
             result = [converter.conversion_to_data(item) for item in result]
@@ -125,14 +125,14 @@ def convertertation(func) -> Note|Account|None:
     '''
     
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):        
+    async def wrapper(*args, **kwargs):        
         
         try:
-            result = func(*converter.conversion_input_args(args), 
-                          **converter.conversion_input_kwargs(kwargs))
+            result = await func(*await converter.conversion_input_args(args), **await converter.conversion_input_kwargs(kwargs))
+
         except Exception as er:
             raise er
 
-        return converter.conversion_result_func(result)
+        return await converter.conversion_result_func(result)
 
     return wrapper

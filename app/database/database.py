@@ -1,3 +1,4 @@
+from typing import AsyncGenerator
 from sqlalchemy import create_engine, Engine
 from app.settings import db_setting
 from app.database.tables.base import Base
@@ -44,7 +45,7 @@ class Database():
         '''
         self.create_database()
         # строка подключения
-        mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@db/{db_setting.DATABASE_NAME}"
+        mysql_database = f"postgresql+psycopg2://{db_setting.DATABASE_USER}:{db_setting.DATABASE_PASSWORD}@{db_setting.HOST}/{db_setting.DATABASE_NAME}"
         # создаем движок SqlAlchemy
         self.engine = create_engine(mysql_database, echo=False)
 
@@ -69,7 +70,7 @@ class Database():
         conn = psycopg2.connect(dbname=db_setting.DATABASE_SERVER, 
                                 user=db_setting.DATABASE_USER, 
                                 password=db_setting.DATABASE_PASSWORD, 
-                                host='db')
+                                host=db_setting.HOST)
         cursor = conn.cursor()
         conn.autocommit = True
 

@@ -12,7 +12,7 @@ class AccountCRUD():
 
 
     @convertertation
-    def add(self, new_acc:Account) -> Account:
+    async def add(self, new_acc:Account) -> Account:
         '''
         Добавить аккаунт
         '''
@@ -28,7 +28,7 @@ class AccountCRUD():
     
     
     @convertertation
-    def get_by_login(self, login:str) -> None|Account:
+    async def get_by_login(self, login:str) -> None|Account:
         '''
         Получить аккаунт по логину
         '''

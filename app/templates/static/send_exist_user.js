@@ -1,4 +1,5 @@
 async function send_user(){
+    // Авторизация
 
     // получаем введеные данные
     const login = document.getElementById("login").value;
@@ -38,7 +39,7 @@ async function invalid_input() {
 
 
 async function notes() {
-
+    // Получение страницы с заметками
     const token = sessionStorage.getItem('authToken');
 
     // отправляем запрос

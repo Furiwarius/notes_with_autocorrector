@@ -12,7 +12,7 @@ class NotesCRUD():
 
 
     @convertertation
-    def add(self, note:Note) -> Note:
+    async def add(self, note:Note) -> Note:
         '''
         Добавить заметку для аккаунта
         '''
@@ -28,7 +28,7 @@ class NotesCRUD():
 
 
     @convertertation
-    def get_notes(self, acc_id:int) -> None|list:
+    async def get_notes(self, acc_id:int) -> None|list:
         '''
         Получить заметки аккаунта
         '''

@@ -78,25 +78,25 @@ def acc_crud() -> AccountCRUD:
 
 
 @pytest_asyncio.fixture(scope="function")
-def account_id(fake:Faker, generate_number:int, acc_crud:AccountCRUD) -> int:
+async def account_id(fake:Faker, generate_number:int, acc_crud:AccountCRUD) -> int:
     
     new_acc = Account(login=f"{fake.first_name()}{generate_number}",
                               password=f"password{generate_number}")
-    acc = acc_crud.add(new_acc)
+    acc:Account = await acc_crud.add(new_acc)
     return acc.id
 
 
 
 @pytest_asyncio.fixture(scope="function")
-def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
+async def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
     '''
     Генерация аккаунта с добавлением его в бд
     '''
     new_acc = copy(account)
-    new_acc.login = to_hash(new_acc.login)
-    new_acc.password = to_hash(new_acc.password)
+    new_acc.login = await to_hash(new_acc.login)
+    new_acc.password = await to_hash(new_acc.password)
     
-    result:Account = acc_crud.add(new_acc)
+    result:Account = await acc_crud.add(new_acc)
     account.id = result.id
     return account
 
@@ -129,9 +129,9 @@ async def async_client(client:TestClient) -> AsyncGenerator:
 
 
 @pytest_asyncio.fixture(scope="function")
-def token(exist_account:Account) -> str:
+async def token(exist_account:Account) -> str:
     '''
     Генерация аккаунта с добавлением его в бд и возвращением токена
     '''
 
-    return create_jwt_token({"user_id": exist_account.id})
+    return await create_jwt_token({"user_id": exist_account.id})
