@@ -19,13 +19,13 @@ numbers = set([number for number in range(1000)])
 
 
 @pytest_asyncio.fixture(scope="session")
-def fake() -> Faker:
+async def fake() -> Faker:
     return Faker(locale="ru")
 
 
 
 @pytest_asyncio.fixture(scope="function")
-def generate_number() -> int:
+async def generate_number() -> int:
         '''
         Генерация уникальной цифры
         '''
@@ -37,7 +37,7 @@ def generate_number() -> int:
 
 
 @pytest_asyncio.fixture(scope="function")
-def account(fake:Faker, generate_number:int) -> Account:
+async def account(fake:Faker, generate_number:int) -> Account:
     '''
     Генератор данных аккаунта
     '''
@@ -50,7 +50,7 @@ def account(fake:Faker, generate_number:int) -> Account:
 
 
 @pytest_asyncio.fixture(scope="function")
-def note(account_id:int, fake:Faker) -> Note:
+async def note(account_id:int, fake:Faker) -> Note:
     '''
     Генератор заметки
     '''
@@ -64,14 +64,14 @@ def note(account_id:int, fake:Faker) -> Note:
 
 
 @pytest_asyncio.fixture(scope="session")
-def note_crud() -> NotesCRUD:
+async def note_crud() -> NotesCRUD:
      
     return NotesCRUD()
 
 
 
 @pytest_asyncio.fixture(scope="session")
-def acc_crud() -> AccountCRUD:
+async def acc_crud() -> AccountCRUD:
      
     return AccountCRUD()
 
@@ -103,14 +103,14 @@ async def exist_account(account:Account, acc_crud:AccountCRUD) -> Account:
 
 
 @pytest_asyncio.fixture(scope="session")
-def account_manager() -> AccountManager:
+async def account_manager() -> AccountManager:
     
     return AccountManager()
 
 
 
 @pytest_asyncio.fixture(scope="session")
-def anyio_backend():
+async def anyio_backend():
     return "asyncio"
 
 
